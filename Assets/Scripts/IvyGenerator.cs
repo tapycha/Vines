@@ -53,11 +53,12 @@ public class IvyGenerator : MonoBehaviour
         }
 
         var ray = new Ray(transform.position, transform.up);
-
+        var iviesPositions = new List<Ray>[ivyAmount];
         for (var i = 0; i < ivyAmount; i++)
         {
             var pos = new List<Ray>();
             SpawnIvy(ref pos, ray, ivyLength, deltaYDistance, deltaSDistance);
+            iviesPositions[i] = pos;
             if (isDebug)
             {
                 for (int j = 0; j < pos.Count - 1; j++)
@@ -65,10 +66,9 @@ public class IvyGenerator : MonoBehaviour
                     Debug.DrawLine(pos[j].origin, pos[j + 1].origin, Color.yellow, DebugTime);
                 }
             }
-
-            var pipe = transform.GetComponent<ProceduralMesh>();
-            pipe.MakeMesh(pos, width);
         }
+        var pipe = transform.GetComponent<ProceduralMesh>();
+        pipe.MakeMesh(iviesPositions, width);
     }
 
     private void SpawnIvy(ref List<Ray> pos, Ray spawnPoint, int length, float deltaUp, float deltaSide,
