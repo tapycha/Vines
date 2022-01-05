@@ -42,19 +42,52 @@ public class ProceduralMesh : MonoBehaviour
             var offset = i + 1 == positions.Count
                 ? GetLeftRightPoints(positions[i - 1], positions[i], width)
                 : GetLeftRightPoints(positions[i], positions[i + 1], width);
-            var verOffset = i * 2;
-            var nextPos = positions[i].origin - transform.position + positions[i].direction * directionOffset;
-            _vertices[verOffset] = nextPos + offset;
-            _vertices[verOffset + 1] = nextPos - offset;
-            var prev = i - 1;
-            var triOffset = prev * 6;
-            var verTrisOffset = prev * 2;
-            _triangles[triOffset] = verTrisOffset;
-            _triangles[triOffset + 1] = verTrisOffset + 2;
-            _triangles[triOffset + 2] = verTrisOffset + 1;
-            _triangles[triOffset + 3] = verTrisOffset + 1;
-            _triangles[triOffset + 4] = verTrisOffset + 2;
-            _triangles[triOffset + 5] = verTrisOffset + 3;
+            if (i == 1)
+            {
+                var verOffset = i * 2;
+                var pastDirection = positions[i - 1].origin - positions[i].origin;
+                var nextPos = positions[i].origin - transform.position + positions[i].direction * directionOffset +
+                              pastDirection.normalized * width;
+                _vertices[verOffset] = nextPos + offset;
+                _vertices[verOffset + 1] = nextPos - offset;
+                var prev = i - 1;
+                var triOffset = prev * 6;
+                var verTrisOffset = prev * 2;
+                _triangles[triOffset] = verTrisOffset;
+                _triangles[triOffset + 1] = verTrisOffset + 2;
+                _triangles[triOffset + 2] = verTrisOffset + 1;
+                _triangles[triOffset + 3] = verTrisOffset + 1;
+                _triangles[triOffset + 4] = verTrisOffset + 2;
+                _triangles[triOffset + 5] = verTrisOffset + 3;
+            }
+            else
+            {
+                var verOffset = (i - 1) * 4;
+                var pastDirection = positions[i - 1].origin - positions[i].origin;
+                var nextPos = positions[i].origin - transform.position + positions[i].direction * directionOffset +
+                              pastDirection.normalized * width;
+                var prevPos = positions[i - 1].origin - transform.position +
+                              positions[i - 1].direction * directionOffset
+                              - pastDirection.normalized * width;
+                _vertices[verOffset] = prevPos + offset;
+                _vertices[verOffset + 1] = prevPos - offset;
+                _vertices[verOffset + 2] = nextPos + offset;
+                _vertices[verOffset + 3] = nextPos - offset;
+                var triOffset = (i - 2) * 12 + 6;
+                var verTrisOffset = (i - 2) * 4 + 2;
+                _triangles[triOffset] = verTrisOffset;
+                _triangles[triOffset + 1] = verTrisOffset + 2;
+                _triangles[triOffset + 2] = verTrisOffset + 1;
+                _triangles[triOffset + 3] = verTrisOffset + 1;
+                _triangles[triOffset + 4] = verTrisOffset + 2;
+                _triangles[triOffset + 5] = verTrisOffset + 3;
+                _triangles[triOffset + 6] = verTrisOffset + 2;
+                _triangles[triOffset + 7] = verTrisOffset + 4;
+                _triangles[triOffset + 8] = verTrisOffset + 3;
+                _triangles[triOffset + 9] = verTrisOffset + 3;
+                _triangles[triOffset + 10] = verTrisOffset + 4;
+                _triangles[triOffset + 11] = verTrisOffset + 5;
+            }
         }
     }
 
