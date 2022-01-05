@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using System.Diagnostics;
@@ -15,6 +14,7 @@ public class IvyGenerator : MonoBehaviour
     [SerializeField] private float deltaSDistance;
     [SerializeField] private float fallThreshold;
     [SerializeField] private LayerMask layerMask;
+    [SerializeField] private float width;
     [SerializeField] private bool isDebug;
 
 
@@ -63,15 +63,11 @@ public class IvyGenerator : MonoBehaviour
                 for (int j = 0; j < pos.Count - 1; j++)
                 {
                     Debug.DrawLine(pos[j].origin, pos[j + 1].origin, Color.yellow, DebugTime);
-                    // Debug.DrawRay(pos[j].origin,  Vector3.Cross( pos[j + 1].origin-pos[j].origin, pos[j].direction).normalized, Color.green, DebugTime);
                 }
             }
 
-            // var go = new GameObject();
-            // go.transform.position = transform.position;
-            // go.transform.SetParent(transform);
             var pipe = transform.GetComponent<ProceduralMesh>();
-            pipe.MakeMesh(pos);
+            pipe.MakeMesh(pos, width);
         }
     }
 
@@ -187,6 +183,7 @@ public class IvyGenerator : MonoBehaviour
                 break;
             }
         }
+
         pos.Add(spawnPoint);
     }
 
