@@ -6,7 +6,7 @@ using Debug = UnityEngine.Debug;
 
 public class IvyGenerator : MonoBehaviour
 {
-    [SerializeField] private int ivyAmount;
+    [Header("Branches")] [SerializeField] private int ivyAmount;
     [SerializeField] private int ivyLength;
     [SerializeField] private int ivyJoinAngleLimitMin;
     [SerializeField] private int ivyJoinAngleLimitMax;
@@ -15,7 +15,15 @@ public class IvyGenerator : MonoBehaviour
     [SerializeField] private float fallThreshold;
     [SerializeField] private LayerMask layerMask;
     [SerializeField] private float width;
-    [SerializeField] private bool isDebug;
+    [SerializeField] private float directionOffset = 0.01f;
+
+    [Header("Leaves")] [SerializeField] private float distancePetLeaf;
+    [SerializeField] private float directionOffsetMin = 0.01f;
+    [SerializeField] private float directionOffsetMax = 0.02f;
+    [SerializeField] private float widthMult = 2f;
+    [SerializeField] private float leafWidth;
+
+    [Header("Debug")] [SerializeField] private bool isDebug;
 
 
     private const float DebugTime = 2000;
@@ -47,18 +55,15 @@ public class IvyGenerator : MonoBehaviour
 
     private void A()
     {
-        foreach (Transform child in transform)
-        {
-            Destroy(child.gameObject);
-        }
-
         var ray = new Ray(transform.position, transform.up);
         var iviesPositions = new List<Ray>[ivyAmount];
+        var iviesLeafPositions = new List<Ray>[ivyAmount];
         for (var i = 0; i < ivyAmount; i++)
         {
             var pos = new List<Ray>();
             SpawnIvy(ref pos, ray, ivyLength, deltaYDistance, deltaSDistance);
             iviesPositions[i] = pos;
+            iviesLeafPositions[i] = GenerateLeafs(pos);
             if (isDebug)
             {
                 for (int j = 0; j < pos.Count - 1; j++)
@@ -67,8 +72,11 @@ public class IvyGenerator : MonoBehaviour
                 }
             }
         }
-        var pipe = transform.GetComponent<ProceduralMesh>();
-        pipe.MakeMesh(iviesPositions, width);
+
+        var pipe = transform.GetComponent<ProceduralIvyBranches>();
+        pipe.MakeMesh(iviesPositions, width, directionOffset);
+        var leaves = transform.GetComponentInChildren<ProceduralIvyLeaves>();
+        leaves.MakeMesh(iviesLeafPositions, leafWidth, directionOffsetMin, directionOffsetMax, widthMult);
     }
 
     private void SpawnIvy(ref List<Ray> pos, Ray spawnPoint, int length, float deltaUp, float deltaSide,
@@ -194,7 +202,29 @@ public class IvyGenerator : MonoBehaviour
     {
         var a = GetPointPlaneIntersect(point1.origin, point2);
         var b = GetPointPlaneIntersect(point2.origin, point1);
-        // Debug.DrawLine(a, b, Color.blue, DebugTime);
+        if (isDebug)
+        {
+            Debug.DrawLine(a, b, Color.blue, DebugTime);
+        }
+
         return (b - a) / 2f + a;
+    }
+
+    private List<Ray> GenerateLeafs(List<Ray> points)
+    {
+        var leaves = new List<Ray>();
+        for (var i = 0; i < points.Count - 1; i++)
+        {
+            var dir = points[i + 1].origin - points[i].origin;
+            var length = dir.magnitude;
+            var addAmount = (int)(length / distancePetLeaf);
+            leaves.Add(points[i]);
+            for (var j = 1; j <= addAmount; j++)
+            {
+                leaves.Add(new Ray(dir / addAmount * j+points[i].origin, points[i].direction));
+            }
+        }
+
+        return leaves;
     }
 }

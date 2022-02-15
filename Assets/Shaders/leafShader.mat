@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: vineShader
-  m_Shader: {fileID: -6465566751694194690, guid: cdd6e5a333ddc96498b49c7650d68ce8, type: 3}
+  m_Name: leafShader
+  m_Shader: {fileID: -6465566751694194690, guid: 3a8f4f5c945406f4dbde878a6587c954, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -19,6 +19,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_f3ca9cf1329b435fae78f6baea54bc9a:
+        m_Texture: {fileID: 2800000, guid: 758c0c18f663ecf4d87d33b0d5e70493, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -33,11 +37,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Grow: 1
+    - Vector1_3e1467eb749c40e39720d8f3b825ff56: 0
     - Vector1_7b6e46f5069b4582a47f480f41fa2100: 0
-    - Vector1_7d5aa46fb7494fdcab0df9e15a9bb30a: 1
     - Vector1_9c7999a7446041eba2c801fef22b0868: 0.97
     - Vector1_d8ad8c6c69b042418cdac664a46dccae: 0
-    - Vector1_e3c0841a776146ac99964e7e77352f9d: -4
     m_Colors:
-    - Color_eb5a67ac0aab441a9d257476fe913dae: {r: 0.42452827, g: 0.25574034, b: 0.15018687, a: 1}
+    - Color_eb5a67ac0aab441a9d257476fe913dae: {r: 0.11801354, g: 0.6415094, b: 0.29000518, a: 0}
+    - Tiling: {r: 1, g: 1, b: 0, a: 0}
+    - Vector2_e3eb84e236f14c9295da5081f4d48bc3: {r: 104, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
